@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    h6 Update Page
+    form(action=`${baseRoute}/api/users/${nick}?_method=put` method="POST" enctype='multipart/form-data')
+        input(type='text' name='nick' placeholder='Nick to update' value=nick_to_update)
+        br
+        input(type='text' name='first_name' placeholder='First name' value=first_name)
+        input(type='text' name='last_name' placeholder='Last name' value=last_name)
+        br
+        input(type='file' name='profile_pic' accept='image/png, image/jpeg')
+        br
+        input(type='text' name='last_online' placeholder='last_online' value=last_online)
+        br
+        input(type='submit' value='Update user')
+

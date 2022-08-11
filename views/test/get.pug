@@ -1,0 +1,6 @@
+extends ../layout
+
+block content
+    form(action=`${baseRoute}/api/users/${nick}` method='GET')
+        input(type='text' id='nick' name='nick' placeholder='nick')
+        input(type='submit' id='submitBtn' value='Get User')
