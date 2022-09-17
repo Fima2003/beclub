@@ -6,7 +6,7 @@ const db = require('../db_setup');
 const bcrypt = require('bcrypt');
 /** FUNCTIONS FOR DUMMY DATA **/
 exports.get_dummy_data = function(req, res, next){
-    res.render('test/dummy_data_page', {
+    res.render('test/users/dummy_data_page', {
         title: "DummyData",
         baseRoute: ''
     });
@@ -18,37 +18,43 @@ exports.post_dummy_data = function(req, res, next){
             userCreate(
                 'fima__rubin', 'fima.rubin@gmail.com', 'qwertyuiop', 'Fima', 'Rubin',
                 new Date(2003, 3, 22), './test_images/2020-09-09 13.26.04.jpg',
-                ['Crypto', 'Tech', 'Music'], Date.now(), 0, false, callback);
+                ['Crypto', 'Tech', 'Music'], Date.now(), 0, false,
+                'male', {number: "1923192319231923", expirationDate: "12/25"}, callback);
         },
         function(callback){
             userCreate(
                 'taty.goldstein', 'tatty.goldstein@gmail.com', '1234567890', 'Taty', 'Goldstein',
                 new Date(2001, 1, 12), './test_images/2020-12-16 16.16.46.jpg',
-                ['Clothes', 'Erotics', 'Holidays'], Date.now(), 0, false, callback);
+                ['Clothes', 'Erotics', 'Holidays'], Date.now(), 0, false,
+                'female', {number: "1923192319231923", expirationDate: "12/25"}, callback);
         },
         function(callback){
             userCreate(
                 'unggodded', 'spam.generous@gmail.com', '1q2w3e4r5t6y7u8i9o', 'Ung', 'Godded',
                 new Date(1999, 12, 31), './test_images/2021-01-12 00.21.22.jpg',
-                ['Concerts', 'Flights', 'Wonders'], Date.now(), 0, false, callback);
+                ['Concerts', 'Flights', 'Wonders'], Date.now(), 0, false,
+                'male', false, callback);
         },
         function(callback){
             userCreate(
                 'daone', 'closeenough@hotspace.com', 'poiuytrewq', 'Zhenya', 'Chopkis',
                 new Date(1919, 10, 11), './test_images/2021-05-23 23.42.33.jpg',
-                ['Concerts', 'Flights', 'Dancing'], Date.now(), 0, false, callback);
+                ['Concerts', 'Flights', 'Dancing'], Date.now(), 0, false,
+                'female', false, callback);
         },
         function(callback){
             userCreate(
                 'jesus', 'jesus@heavens.org', 'godforgives', 'Jesus', 'Christ',
                 new Date(1959, 10, 16), './test_images/2021-05-23 23.42.50.jpg',
-                ['Religion', 'Wine', 'Magic'], Date.now(), 0, false, callback);
+                ['Religion', 'Wine', 'Magic'], Date.now(), 0, false,
+                'male', {number: "1923192319231923", expirationDate: "12/25"}, callback);
         },
         function(callback){
             userCreate(
                 'obsolete', 'obsolete@brit.org', 'theone', 'Dan', 'Freed',
                 new Date(1951, 5, 10), './test_images/2021-05-23 23.42.54.jpg',
-                ['Concerts', 'Party', 'Travelling'], Date.now(), 0, false, callback);
+                ['Concerts', 'Party', 'Travelling'], Date.now(), 0, false,
+                'male', false, callback);
         },
     ])
         .then((r) => res.send('Successfully Uploaded'))
@@ -83,7 +89,7 @@ exports.delete_dummy_data = function(req, res, next){
 function userCreate(nick, email, password, first_name, last_name,
                     date_of_birth, imagePath, preferences,
                     last_entered, amount_of_subscriptions,
-                    subscriptions, cb){
+                    subscriptions, gender, creditCardDetails, cb){
     console.log("start userCreate");
     let id = crypto.createHash('sha256').update(nick).digest('hex');
     let pass = bcrypt.hashSync(password, 10);
@@ -100,10 +106,12 @@ function userCreate(nick, email, password, first_name, last_name,
             contentType: 'image/jpg'
         },
         preferences: preferences,
+        gender: gender,
     };
     if(last_entered !== false) userDetail.last_entered = last_entered;
     if(amount_of_subscriptions !== false) userDetail.amount_of_subscriptions = amount_of_subscriptions;
     if(subscriptions !== false) userDetail.subscriptions = subscriptions;
+    if(creditCardDetails !== false) userDetail.creditCard = creditCardDetails;
     console.log("Generated userDetail Object");
     let user = new User(userDetail);
     console.log("About to save");
@@ -123,10 +131,6 @@ function deleteUser(nick, cb){
 /** END OF FUNCTIONS FOR DUMMY DATA **/
 
 exports.sign_up = function(req, res, next){
-    if(req.isAuthenticated()){
-        res.send('already signed in');
-        return ;
-    }
     let params = {
         title: "Sign Up",
         baseRoute: '',
@@ -135,9 +139,10 @@ exports.sign_up = function(req, res, next){
         password: 'qwertyuiop',
         first_name: 'Fima',
         last_name: 'Rubin',
-        preferences: 'crypto,it,coding'
+        preferences: 'crypto,it,coding',
+        gender: 'male'
     }
-    res.render('test/sign_up', params);
+    res.render('test/users/sign_up', params);
 }
 
 exports.sign_in = function(req, res, next){
@@ -145,7 +150,7 @@ exports.sign_in = function(req, res, next){
         title: "Sign in",
         baseRoute: '',
     }
-    res.render('test/sign_in', params);
+    res.render('test/users/sign_in', params);
 }
 
 exports.get_user = function(req, res, next){
@@ -154,7 +159,8 @@ exports.get_user = function(req, res, next){
         baseRoute: '',
         nick: 'fima__rubin'
     }
-    res.render('test/get', params);
+    console.log("Time to render");
+    res.render('test/users/get', params);
 }
 
 exports.update_user = function(req, res, next){
@@ -165,9 +171,11 @@ exports.update_user = function(req, res, next){
         nick_to_update: 'fima__rubin',
         first_name: 'Jack',
         last_name: "Jonnas",
-        last_online: '1659912553567'
+        last_online: '1659912553567',
+        creditCardNumber: '1234567890123456',
+        creditCardDate: '12/29',
     }
-    res.render('test/update', params);
+    res.render('test/users/update', params);
 }
 
 exports.sign_out = function(req, res, next){
@@ -175,7 +183,7 @@ exports.sign_out = function(req, res, next){
         title: "Sign Out",
         baseRoute: ""
     }
-    res.render('test/sign_out', params);
+    res.render('test/users/sign_out', params);
 }
 
 exports.delete_user = function(req, res, next){
@@ -185,6 +193,39 @@ exports.delete_user = function(req, res, next){
         nick: 'fima__rubin',
         password: 'qwertyuiop'
     };
-    res.render('test/delete_user', params);
+    res.render('test/users/delete_user', params);
 
+}
+
+exports.create = function(req, res, next){
+    let params = {
+        baseRoute: '',
+        nick: 'cluves',
+        name: 'Cluves',
+        website: 'cluves.com',
+        support_email: 'support@cluves.com',
+        price: 10,
+        password: "qwertyuiop"
+    }
+    res.render('test/verify_club/create', params);
+}
+
+exports.verify = function(req, res, next){
+    let params = {
+        baseRoute: '',
+        nick: 'gucci',
+        name: 'gucci',
+        website: 'website',
+        support_email: 'support@gucci.com'
+    }
+    res.render('test/verify_club/verification', params);
+}
+
+exports.create_subscription = function(req, res){
+    let params = {
+        baseRoute: '',
+        userId: '630cc4b3a22ac991bf239da5',
+        clubId: '630cc5b2ce50eb26e62964f4',
+    };
+    res.render('test/subscriptions/create', params);
 }

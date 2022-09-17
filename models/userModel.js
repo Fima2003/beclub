@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    _id: String,
     nick: {type: String, required: true},
     email: {type: String, required: true},
     password: {type: String, required: true},
@@ -16,6 +15,9 @@ const userSchema = new Schema({
     preferences: {
         type: [{type: String, required: true}],
         validate: [(val) => val.length >= 3, 'Needs to be at least 3 preferences']
+    },
+    gender: {
+        type: String, required: true,
     },
     last_entered: {type: Number, default: Date.now},
     amount_of_subscriptions: {type: Number, default: 0},

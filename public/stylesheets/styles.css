@@ -20,7 +20,7 @@
 
 .left {
     width: 20%;
-    background-color: #000009;
+    background-color: #000000;
     display: flex;
     justify-content: flex-end;
     height: 1000px;
@@ -78,13 +78,8 @@ select:focus{
 
 .item:checked{
     background: linear-gradient(white, white);
-    /*This one is for IE*/
     background-color: white !important;
-    /*Keep the text color the same on select*/
-    /*I used black as I don't have a styled select like your picture*/
-    /*You can change this part to fit your use case of text color*/
     color: black;
-    /*-webkit-text-fill-color: black;*/
 }
 
 .inside{
