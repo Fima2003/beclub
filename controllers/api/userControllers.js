@@ -50,14 +50,14 @@ exports.create_user = async function(req, res){
     }
     let takenNick = await User.findOne({nick: options.nick});
     let takenMail = await User.findOne({email: options.email});
-    if(takenNick || takenMail){
+    if(takenNick){
         return convertResponse(responses.user_already_exists, res);
+    }else if(takenMail){
+        return convertResponse(responses.email_already_exists, res);
     }
-    
     userCreate(options.nick, options.email, options.password, options.first_name, options.last_name,
         options.date_of_birth, options.preferences.split(','),
         options.gender, res);
-
 }
 
 function requiredExists(options){
