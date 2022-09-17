@@ -1,8 +1,0 @@
-extends ../layout
-
-block content
-    form(action=`${baseRoute}/test/generate` method='POST')
-        input(type='submit' value='Generate Dummy Data')
-    br
-    form(action=`${baseRoute}/test/generate?_method=delete` method='POST')
-        input(type='submit' value='Delete Dummy Data')

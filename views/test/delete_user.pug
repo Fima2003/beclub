@@ -1,7 +1,0 @@
-extends ../layout
-
-block content
-    form(action=`${baseRoute}/api/users/${nick}?_method=delete` method='POST')
-        input(type='text' name='nick' value=`${nick}` placeholder='nickname')
-        input(type='password' name='password' value=`${password}` placeholder='password')
-        input(type='submit' value='Delete User')
