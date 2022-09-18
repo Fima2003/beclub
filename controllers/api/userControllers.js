@@ -61,10 +61,24 @@ exports.create_user = async function(req, res){
 }
 
 function requiredExists(options){
-    // TODO: Add validation of data
-    const mailRegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
-    return options.nick!==undefined && options.email!==undefined && options.password!==undefined && options.first_name!==undefined && options.last_name!==undefined
-        && options.date_of_birth!==undefined && options.preferences!==undefined && options.gender!==undefined && mailRegExp.test(options.email);
+    try {
+        const mailRegExp = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+        const usernameRegExp = /^[a-z0-9._]{3,12}$/;
+        const passRegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_.])[A-Za-z\d@$!%*?&_.]{8,}$/;
+        const nameRegExp = /^[a-zA-Z]+$/;
+        let birth = options.date_of_birth.split('-');
+        birth[2] = birth[2].substring(0, 2);
+        let now = new Date();
+        let date_of_birth = new Date(birth[0], birth[1], birth[2]);
+        return options.nick !== undefined
+            && options.email !== undefined && options.password !== undefined && options.first_name !== undefined
+            && options.last_name !== undefined && options.date_of_birth !== undefined && options.preferences !== undefined
+            && options.gender !== undefined && mailRegExp.test(options.email) && usernameRegExp.test(options.nick)
+            && passRegExp.test(options.password) && nameRegExp.test(options.first_name) && nameRegExp.test(options.last_name)
+            && (now - date_of_birth)/31536000000 > 18.0 && (['Male', 'Female', 'Other'].indexOf(options.gender) !== -1);
+    }catch (e){
+        return false;
+    }
 }
 
 function userCreate(nick, email, password, first_name, last_name,
@@ -96,7 +110,6 @@ function userCreate(nick, email, password, first_name, last_name,
             if(err) {
                 return convertResponse(responses.custom_error(err), res);
             }
-            console.log(token);
             return res.status(200).json({token: `Bearer ${token}`});
         });
     });
