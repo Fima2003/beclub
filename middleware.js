@@ -2,13 +2,13 @@ const responses = require("./responses");
 require('dotenv').config()
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const { convertResponse } = require("./external_functions");
 
 exports.adminsOnly = function(req, res, next){
     const username = process.env.ADMIN_NICK;
     const pw = process.env.ADMIN_PW;
     if(!req.user || !(username === req.user.nick && bcrypt.compareSync(pw, req.user.password))){
-        res.send(responses.not_authorized);
-        return ;
+        return convertResponse(responses.not_authorized, res);
     }
     next();
 }
@@ -31,7 +31,8 @@ exports.isAuthenticated = function(req, res, next){
             next();
         })
     }else{
-        return res.json({message: "Incorrect token was given", isLoggedIn: false});
+        console.log("custom");
+        return convertResponse(responses.custom_error("Incorrect token was given"), res);
     }
 }
 
@@ -41,6 +42,6 @@ exports.userOnly = function(req, res, next){
     if(req.user.nick === req.body.nick || req.user.nick === req.params.nick || (username === req.user.nick && bcrypt.compareSync(pw, req.user.password))){
         next();
     }else{
-        res.send(responses.not_authorized);
+        return convertResponse(responses.not_authorized, res);
     }
 }

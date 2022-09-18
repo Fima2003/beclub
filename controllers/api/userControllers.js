@@ -86,7 +86,19 @@ function userCreate(nick, email, password, first_name, last_name,
         if (err) {
             return convertResponse(responses.custom_error(err), res);
         }
-        return convertResponse(responses.success, res);
+        const payload = {
+            id: user.id,
+            nick: userDetail.nick,
+            email: userDetail.email,
+            password: userDetail.password
+        }
+        jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 86400}, (err, token) => {
+            if(err) {
+                return convertResponse(responses.custom_error(err), res);
+            }
+            console.log(token);
+            return res.status(200).json({token: `Bearer ${token}`});
+        });
     });
 }
 
