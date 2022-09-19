@@ -10,6 +10,7 @@ const subscriptionSchema = new Schema({
     },
     date_of_unsubscription: Date,
     date_of_resubscription: Date,
+    options: Schema.Types.Mixed
 });
 
 subscriptionSchema.virtual('url').get(() => {

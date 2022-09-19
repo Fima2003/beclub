@@ -14,7 +14,7 @@ exports.create = async function(req, res){
 
     let options = req.body;
     if (options['nick'] !== undefined && options['support_email'] !== undefined && options['website'] !== undefined && options['name'] !== undefined
-        && options['password'] && options['price']) {
+        && options['password'] && options['type']) {
         let existsInClubDB = await Club.findOne({'nick': options['nick']});
         if(!existsInClubDB) {
             unVerified.findOne({'nick': options['nick']}, function (err, club) {
@@ -25,7 +25,7 @@ exports.create = async function(req, res){
                         support_email: options['support_email'],
                         website: options['website'],
                         name: options['name'],
-                        price: options['price'],
+                        type: options['type'],
                         password: options['password']
                     };
                     let unverifiedClub = new unVerified(clubOptions);
@@ -49,17 +49,16 @@ exports.create = async function(req, res){
 
 exports.verify = async function(req, res){
     let options = req.body;
-    if(options['nick'] && options['website'] && options['support_email'] && options['name'] && options['password'] && options['price']){
+    if(options['nick'] && options['website'] && options['support_email'] && options['name'] && options['password'] && options['type']){
         let pass = bcrypt.hashSync(options['password'], 10);
         let clubDefaults = {
+            name: options['name'],
             nick: options['nick'],
             website: options['website'],
             support_email: options['support_email'],
-            name: options['name'],
             password: pass,
-            price: options['price']
+            type: options['type']
         };
-
         unVerified.deleteOne({nick: options['nick']}, function(err, obj){
             if(err) {
                 return convertResponse(responses.custom_error(err), res);
@@ -78,7 +77,6 @@ exports.verify = async function(req, res){
     }
 }
 
-/**  */
 exports.unverify = function(req, res){
     let options = req.body;
     if(options['nick']){

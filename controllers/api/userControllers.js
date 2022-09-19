@@ -23,7 +23,6 @@ exports.sign_in = function(req, res){
                 const payload = {
                     id: dbUser._id,
                     nick: dbUser.nick,
-                    email: dbUser.email,
                     password: dbUser.password
                 }
                 jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 86400}, (err, token)=> {

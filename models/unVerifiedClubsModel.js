@@ -7,8 +7,8 @@ const clubValidationSchema = new Schema({
     website: {type: String, required: true},
     support_email: {type: String, required: true},
     password: {type: String, required: true},
-    price: {type: Number, required: true, min: 0.5, max: 100},
     date_of_creation: {type: Date, required: true, default: Date.now()},
+    type: {type: String, required: true}
 });
 
 clubValidationSchema.virtual('url').get( function(){

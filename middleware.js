@@ -4,10 +4,14 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { convertResponse } = require("./external_functions");
 
-exports.adminsOnly = function(req, res, next){
+function isAdmin(req){
     const username = process.env.ADMIN_NICK;
     const pw = process.env.ADMIN_PW;
-    if(!req.user || !(username === req.user.nick && bcrypt.compareSync(pw, req.user.password))){
+    return username === req.user.nick && bcrypt.compareSync(pw, req.user.password);
+}
+
+exports.adminsOnly = function(req, res, next){
+    if(!req.user || !isAdmin(req)){
         return convertResponse(responses.not_authorized, res);
     }
     next();
@@ -30,18 +34,20 @@ exports.isAuthenticated = function(req, res, next){
             req.user.email = decoded.email;
             next();
         })
-    }else{
-        console.log("custom");
-        return convertResponse(responses.custom_error("Incorrect token was given"), res);
     }
+    return convertResponse(responses.custom_error("Incorrect token was given"), res);
 }
 
 exports.userOnly = function(req, res, next){
-    const username = process.env.ADMIN_NICK;
-    const pw = process.env.ADMIN_PW;
-    if(req.user.nick === req.body.nick || req.user.nick === req.params.nick || (username === req.user.nick && bcrypt.compareSync(pw, req.user.password))){
-        next();
-    }else{
-        return convertResponse(responses.not_authorized, res);
+    if(req.user.nick === req.body.nick || req.user.nick === req.params.nick || isAdmin(req)){
+        return next();
     }
+    return convertResponse(responses.forbidden, res);
+}
+
+exports.passwordRequired = function(req, res, next){
+    if(bcrypt.compareSync(req.body.password, req.user.password) || isAdmin(req)){
+        return next();
+    }
+    return convertResponse(responses.forbidden);
 }
