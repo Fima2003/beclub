@@ -68,6 +68,18 @@ exports.get_club = function(req, res){
     }
 }
 
+exports.get_clubs = async function(req, res) {
+    if(!req.query.nick){
+        return convertResponse(responses.not_all_fields, res);
+    }
+    try {
+        let clubs = await Club.find({nick: {$regex: req.query.nick}}).limit(10).select('_id nick profile_image');
+        return res.status(200).json({clubs: clubs});
+    } catch (e) {
+        return convertResponse(responses.custom_error(e), res);
+    }
+}
+
 exports.update_club = function(req, res){
     if(req.body.nick!==undefined &&
         (req.body.subscribers!==undefined || req.body.posts!==undefined ||

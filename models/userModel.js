@@ -8,10 +8,6 @@ const userSchema = new Schema({
     first_name: {type: String, required: true},
     last_name: {type: String, required: true},
     date_of_birth: {type: Date, required: true},
-    image: {
-        data: Buffer,
-        contentType: String
-    },
     preferences: {
         type: [{type: String, required: true}],
         validate: [(val) => val.length >= 3, 'Needs to be at least 3 preferences']

@@ -9,6 +9,7 @@ const clubSchema = new Schema({
     support_email: {type: String, required: true},
     password: {type: String, required: true},
     price: {type: Number, required: true, min: 0.5, max: 100},
+    profile_image: {type: String, default: "https://images.pexels.com/photos/326055/pexels-photo-326055.jpeg?auto=compress&cs=tinysrgb&w=1600"},
     subscriptions: [{type: Schema.Types.ObjectId}],
     posts:  [{type: Schema.Types.ObjectId}],
     comments:  [{type: Schema.Types.ObjectId}],

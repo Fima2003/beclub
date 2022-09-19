@@ -33,6 +33,8 @@ const upload = multer({
 router.post('/sign_in', clubControllers.sign_in);
 router.post('/sign_out', middleware.isAuthenticated, clubControllers.sign_out);
 
+router.get('/get_clubs', middleware.isAuthenticated, clubControllers.get_clubs);
+
 router.get('/', middleware.isAuthenticated, clubControllers.get_club);
 router.put('/', middleware.isAuthenticated, middleware.userOnly, upload.single('profile_pic'), clubControllers.update_club);
 router.delete('/', middleware.isAuthenticated, middleware.userOnly, clubControllers.delete_club);
