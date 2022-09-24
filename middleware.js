@@ -22,20 +22,18 @@ exports.isAuthenticated = function(req, res, next){
     if(token){
         jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if(err){
-                return res.json({
-                    isLoggedIn: false,
-                    message: "Failed to authenticate"
-                });
+                return convertResponse(responses.not_authorized);
             }
             req.user = {};
             req.user.id = decoded.id;
             req.user.password = decoded.password;
             req.user.nick = decoded.nick;
             req.user.email = decoded.email;
-            next();
-        })
+            return next();
+        });
+    }else {
+        convertResponse(responses.custom_error("Incorrect token was given"), res);
     }
-    return convertResponse(responses.custom_error("Incorrect token was given"), res);
 }
 
 exports.userOnly = function(req, res, next){

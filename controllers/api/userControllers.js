@@ -25,7 +25,7 @@ exports.sign_in = function(req, res){
                     nick: dbUser.nick,
                     password: dbUser.password
                 }
-                jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 86400}, (err, token)=> {
+                jwt.sign(payload, process.env.JWT_SECRET, {}, (err, token)=> {
                     if(err) {
                         return convertResponse(responses.custom_error(err), res);
                     }

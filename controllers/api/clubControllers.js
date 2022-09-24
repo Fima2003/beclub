@@ -58,7 +58,6 @@ exports.get_club = function(req, res){
                 nick: club.nick,
                 name: club.name,
                 website: club.website,
-                posts: club.posts,
                 promotions: club.promotions,
                 profile_image: club.profile_image,
                 type: club.type
@@ -81,10 +80,9 @@ exports.get_clubs = async function(req, res) {
 
 exports.update_club = function(req, res){
     if(req.body.nick!==undefined &&
-        (req.body.subscriptions!==undefined || req.body.posts!==undefined ||
-            req.body.comments!==undefined || req.body.promotions!==undefined
+        (req.body.subscriptions!==undefined || req.body.comments!==undefined || req.body.promotions!==undefined
             || req.body.profileUrl!==undefined)){
-        clubUpdate(req.body.nick, req.body.subscriptions, req.body.posts, req.body.comments, req.body.propositions, req.body.profileUrl)
+        clubUpdate(req.body.nick, req.body.subscriptions, req.body.comments, req.body.propositions, req.body.profileUrl)
             .then((result) => {
                 if(result.modifiedCount > 0 && result.acknowledged){
                     return convertResponse(responses.success, res);
@@ -97,10 +95,9 @@ exports.update_club = function(req, res){
     }
 }
 
-async function clubUpdate(nick_to_update, subscribers, posts, comments, propositions, profileUrl){
+async function clubUpdate(nick_to_update, subscribers, comments, propositions, profileUrl){
     let update = {};
     if(subscribers) update['subscribers'] = subscribers;
-    if(posts) update['posts'] = posts;
     if(comments) update['comments'] = comments;
     if(propositions) update['propositions'] = propositions;
     if(profileUrl)update['profile_url'] = profileUrl;
