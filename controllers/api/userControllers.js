@@ -23,9 +23,11 @@ exports.sign_in = function(req, res){
                 const payload = {
                     id: dbUser._id,
                     nick: dbUser.nick,
-                    password: dbUser.password
+                    password: dbUser.password,
+                    email: dbUser.email,
+                    name: dbUser.full_name
                 }
-                jwt.sign(payload, process.env.JWT_SECRET, {}, (err, token)=> {
+                jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 86400}, (err, token)=> {
                     if(err) {
                         return convertResponse(responses.custom_error(err), res);
                     }
@@ -39,7 +41,7 @@ exports.sign_in = function(req, res){
 }
 
 exports.get_user = function(req, res){
-    return convertResponse(req.user, res);
+    res.status(200).json(req.user);
 }
 
 exports.create_user = async function(req, res){
@@ -103,7 +105,8 @@ function userCreate(nick, email, password, first_name, last_name,
             id: user.id,
             nick: userDetail.nick,
             email: userDetail.email,
-            password: userDetail.password
+            password: userDetail.password,
+            name: `${userDetail.first_name} ${userDetail.last_name}`
         }
         jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: 86400}, (err, token) => {
             if(err) {
@@ -149,20 +152,11 @@ exports.sign_out = function(req, res){
 }
 
 exports.delete_user = function(req, res){
-    bcrypt.compare(req.body.password, req.user.password, function(err, isValid){
-        if(err) {
-            return convertResponse(responses.custom_error(err), res);
-        }
-        if(isValid){
-            User.deleteOne({nick: req.body.nick}).then((result) => {
-                if(result.acknowledged){
-                    return convertResponse(responses.success, res);
-                }else{
-                    return convertResponse(responses.custom_error(result), res);
-                }
-            });
+    User.deleteOne({nick: req.body.nick}).then((result) => {
+        if(result.acknowledged){
+            return convertResponse(responses.success, res);
         }else{
-            return convertResponse(responses.wrong_password, res);
+            return convertResponse(responses.custom_error(result), res);
         }
     });
 }

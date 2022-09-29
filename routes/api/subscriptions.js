@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const middleware = require('../../middleware');
+const middleware = require('../../middleware/userMiddleware');
 const subscriptionController = require('../../controllers/api/subscriptionController');
 
 router.get('/', middleware.isAuthenticated, middleware.userOnly, subscriptionController.get_subscription);

@@ -1,0 +1,24 @@
+doctype html
+head
+    title Admin Panel
+    link(rel='stylesheet' href='/stylesheets/styles.css')
+    link(rel='preconnect' href='https://fonts.googleapis.com')
+    link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin='')
+    link(href='https://fonts.googleapis.com/css2?family=Fahkwang:wght@200;300;400;500;600;700&display=swap' rel='stylesheet')
+.header
+    h1 Admin Panel - Verify
+.row
+    .side.column
+        button.side-button Verify
+        button.side-button Clubs
+        button.side-button Users
+    .main.column
+        each box in boxes
+            .box
+                h1 Gucci
+                h4 nick: Gucci
+                h4 website: gucci.com
+                h4 e-mail: support@gucci.com
+                .decision
+                    button.inline.verify Verify
+                    button.inline.decline Decline

@@ -9,12 +9,9 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const responses = require('./responses');
 
-const User = require('./models/userModel');
-const Club = require('./models/clubModel');
 const indexRouter = require('./routes/index');
 const apiRouter = require('./routes/api');
 const testRouter = require('./routes/test');
-const middleware = require('./middleware');
 const app = express();
 
 // view engine setup
