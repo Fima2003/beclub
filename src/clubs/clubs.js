@@ -6,10 +6,6 @@ const userMiddleware = require('../middleware/userMiddleware');
 const verifyControllers = require('./verify_clubs.controller');
 const adminMiddleware = require('../middleware/adminMiddleware');
 
-router.get('/', clubMiddleware.authenticate, clubControllers.get_club);
-router.put('/', clubMiddleware.isAuthenticated, clubMiddleware.clubOnly, clubControllers.update_club);
-router.delete('/', clubMiddleware.isAuthenticated, clubMiddleware.clubOnly, clubControllers.delete_club);
-
 router.post('/sign_in', clubControllers.sign_in);
 router.post('/sign_out', clubMiddleware.isAuthenticated, clubControllers.sign_out);
 
@@ -19,5 +15,9 @@ router.post('/create_verification', verifyControllers.create);
 router.post('/verify', userMiddleware.isAuthenticated, adminMiddleware.adminsOnly, verifyControllers.verify);
 router.post('/reject', userMiddleware.isAuthenticated, adminMiddleware.adminsOnly, verifyControllers.reject);
 router.get('/get_all_unverified_clubs', userMiddleware.isAuthenticated, adminMiddleware.adminsOnly, verifyControllers.getAllClubsForVerification);
+
+router.get('/:nick', clubMiddleware.authenticate, clubControllers.get_club);
+router.put('/:nick', clubMiddleware.isAuthenticated, clubMiddleware.clubOnly, clubControllers.update_club);
+router.delete('/:nick', clubMiddleware.isAuthenticated, clubMiddleware.clubOnly, clubControllers.delete_club);
 
 module.exports = router;

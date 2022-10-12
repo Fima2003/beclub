@@ -6,13 +6,13 @@ const mongoose = require('mongoose');
 const { convertResponse } = require('../../external_functions');
 
 exports.get_subscription = async function(req, res){
-    const options = req.query;
-    if(!options.id) {
+    const options = req.params.id;
+    if(!options) {
         let result = await Subscription.findOne({_id: options.id});
         if (!result) return convertResponse(responses.not_found, res);
-        return res.status(200).json({"results": result});
+        else return res.status(200).json({"results": result});
     }else{
-        return convertResponse(responses.not_all_fields, res);
+        return convertResponse(responses.not_found, res);
     }
 }
 
@@ -32,10 +32,21 @@ exports.create_subscription = async function(req, res){
             });
             dbUser.subscriptions.push(subscription._id);
             dbClub.subscriptions.push(subscription._id);
-            let userRes = await dbUser.save();
-            let clubRes = await dbClub.save();
-            if(userRes && clubRes)
+            async.parallel([
+                async function(callback){
+                    let userRes = await dbUser.save();
+                    callback(null, userRes);
+                },
+                async function(callback){
+                    let clubRes = await dbClub.save();
+                    callback(null, clubRes);
+                },
+            ], function(err, results){
+                if(err){
+                    return convertResponse(responses.custom_error(err));
+                }
                 return convertResponse(responses.success, res);
+            });
         }else{
             res.status(400).json({user: dbUser, club: dbClub});
         }
@@ -46,13 +57,25 @@ exports.create_subscription = async function(req, res){
 
 exports.update_subscription = async function(req, res){
     const option = req.body;
-    if(!option.id && (!option.date_resubscribed || !option.date_unsubscribed)){
+    const id = req.params['id'];
+    if(!id){
         return convertResponse(responses.not_all_fields, res);
     }
-    let dbSubscription = await Subscription.findOne({_id: option.id});
+    let dbSubscription = await Subscription.findOne({_id: id});
     if(!dbSubscription) return convertResponse(responses.not_found, res);
-    if(option.date_resubscribed) dbSubscription.date_of_resubscription = option.date_resubscribed;
-    if(option.date_unsubscribed) dbSubscription.date_of_unsubscription = option.date_unsubscribed;
+    if(option.date_of_resubscription) dbSubscription.date_of_resubscription = option.date_of_resubscription;
+    if(option.date_of_unsubscription) dbSubscription.date_of_unsubscription = option.date_of_unsubscription;
     let result = await dbSubscription.save();
     if(result) return res.status(200).json({newSubscription: dbSubscription});
+    else return convertResponse(responses.custom_error("Could not create a subscription"), res);
+}
+
+exports.delete_subscription = async function (req, res){
+    const id = req.params['id'];
+    if(!id){
+        return convertResponse(responses.not_all_fields);
+    }
+    let result = await Subscription.deleteOne({_id: id});
+    if(result) convertResponse(responses.success, res);
+    else convertResponse(responses.custom_error("Could not delete a subscription"));
 }

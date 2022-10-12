@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const responses = require("../../responses");
 const Club = require("./models/clubs.model");
 const { convertResponse } = require('../../external_functions');
+const Subscription = require("../subscriptions/subscriptions.model");
 
 exports.sign_in = async function(req, res){
     const clubLoggingIn = req.body;
@@ -103,7 +104,11 @@ async function clubUpdate(nick_to_update, subscribers, comments, propositions, p
     return Club.updateOne({nick: nick_to_update}, update);
 }
 
-exports.delete_club = function(req, res){
+exports.delete_club = async function(req, res){
+    let club = await Club.findOne({nick: req.params['nick']});
+    for(let subscription in club.subscriptions){
+        Subscription.deleteOne({_id: id});
+    }
     Club.deleteOne({nick: req.body.nick}).then((result) => {
         if(result.acknowledged){
             return convertResponse(responses.success, res);

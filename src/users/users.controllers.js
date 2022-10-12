@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const User = require('./users.model');
 const responses = require('../../responses');
 const { convertResponse } = require('../../external_functions');
+const Subscription = require("../subscriptions/subscriptions.model");
 
 exports.sign_in = function(req, res){
     const userLogginIn = req.body;
@@ -149,8 +150,12 @@ exports.sign_out = function(req, res){
     });
 }
 
-exports.delete_user = function(req, res){
-    User.deleteOne({nick: req.body.nick}).then((result) => {
+exports.delete_user = async function(req, res){
+    let user = await User.findOne({nick: req.params['nick']});
+    for(let subscription in user.subscriptions){
+        await Subscription.deleteOne({_id: id});
+    }
+    User.deleteOne({nick: req.params['nick']}).then((result) => {
         if(result.acknowledged){
             return convertResponse(responses.success, res);
         }else{
