@@ -1,6 +1,9 @@
-const responses = require("../../responses");
-const { convertResponse } = require('../../external_functions');
+const responses = require("../../utils/responses");
+const { convertResponse } = require("../../utils/external_functions");
+const apiExtr = require("../../utils/decorators");
 
-exports.index = function(req, res){
-    convertResponse(responses.success, res);
+function index(req, res) {
+  convertResponse(responses.success, res);
 }
+
+module.exports = { index };

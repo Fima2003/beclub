@@ -1,8 +1,8 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-const userMiddleware = require('../middleware/userMiddleware');
-const indexControllers = require('./indexControllers');
+const userMiddleware = require("../middleware/user.middleware");
+const indexControllers = require("./indexControllers");
 
-router.get('/', userMiddleware.isAuthenticated, indexControllers.index);
+router.get("/", indexControllers.index);
 
 module.exports = router;

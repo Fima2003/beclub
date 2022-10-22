@@ -4,8 +4,8 @@ const apiControllers = require('./api.controllers');
 const userRouter = require('../users/users');
 const clubRouter = require('../clubs/clubs');
 const subscriptionsRouter = require('../subscriptions/subscriptions');
-const userMiddleware = require('../middleware/userMiddleware');
-const adminMiddleware = require('../middleware/adminMiddleware');
+const userMiddleware = require('../middleware/user.middleware');
+const adminMiddleware = require('../middleware/admin.middleware');
 
 /* GET users listing. */
 router.get('/', apiControllers.index);
