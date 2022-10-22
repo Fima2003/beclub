@@ -6,7 +6,7 @@ const { adminsOnly } = require("../middleware/admin.middleware");
 
 router.post("/sign_in", userControllers.sign_in);
 router.get(
-  "/find/:from/:amount",
+  "/find/:amount",
   userMiddleware.isAuthenticated,
   adminsOnly,
   userControllers.get_users

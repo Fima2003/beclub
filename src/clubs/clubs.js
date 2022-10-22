@@ -50,7 +50,7 @@ router.delete(
 );
 
 router.get(
-  "/find/:from/:amount",
+  "/find/:amount",
   userMiddleware.isAuthenticated,
   adminMiddleware.adminsOnly,
   clubControllers.get_clubs

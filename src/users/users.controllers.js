@@ -105,9 +105,8 @@ function sign_in(req, res) {
 }
 
 async function get_users(req, res) {
-  let from = req.params["from"];
   let amount = req.params["amount"];
-  let users = await User.find({}, { comments: { $slice: [+from, +amount] } })
+  let users = await User.find({}, { comments: { $slice: +amount } })
     .limit(amount)
     .select(
       "nick email first_name last_name date_of_birth preferences gender type subscriptions"

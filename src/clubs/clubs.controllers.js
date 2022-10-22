@@ -88,12 +88,12 @@ async function get_clubs_from_search(req, res) {
 }
 
 async function get_clubs(req, res) {
-  let from = req.params["from"];
   let amount = req.params["amount"];
-  let users = await Club.find({}, { comments: { $slice: [+from, +amount] } })
+  let clubs = await Club.find({}, { comments: { $slice: +amount } })
     .limit(amount)
     .select("nick support_email website name promotions topic");
-  return res.status(200).json({ message: users });
+  console.log(clubs);
+  return res.status(200).json({ message: clubs });
 }
 
 async function sign_in(req, res) {
