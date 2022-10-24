@@ -5,7 +5,7 @@ const clubMiddleware = require("../middleware/club.middleware");
 const userMiddleware = require("../middleware/user.middleware");
 const verifyControllers = require("./verify_clubs.controller");
 const adminMiddleware = require("../middleware/admin.middleware");
-const apiExtr = require("../../utils/decorators");
+const adminController = require("../admin/admin.controller");
 
 router.post("/sign_in", clubControllers.sign_in);
 
@@ -34,6 +34,12 @@ router.get(
   adminMiddleware.adminsOnly,
   verifyControllers.getAllClubsForVerification
 );
+router.get(
+  "/find/:amount",
+  userMiddleware.isAuthenticated,
+  adminMiddleware.adminsOnly,
+  clubControllers.get_clubs
+);
 
 router.get("/:nick", clubMiddleware.authenticate, clubControllers.get_club);
 router.put(
@@ -47,13 +53,6 @@ router.delete(
   clubMiddleware.isAuthenticated,
   clubMiddleware.clubOnly,
   clubControllers.delete_club
-);
-
-router.get(
-  "/find/:amount",
-  userMiddleware.isAuthenticated,
-  adminMiddleware.adminsOnly,
-  clubControllers.get_clubs
 );
 
 module.exports = router;

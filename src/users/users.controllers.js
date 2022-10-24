@@ -46,7 +46,7 @@ function update_user(req, res) {
 async function delete_user(req, res) {
   let user = await User.findOne({ nick: req.params["nick"] });
   for (let subscription in user.subscriptions) {
-    await Subscription.deleteOne({ _id: id });
+    await Subscription.deleteOne({ _id: subscription });
   }
   User.deleteOne({ nick: req.params["nick"] }).then((result) => {
     if (result.acknowledged) {
@@ -68,7 +68,6 @@ function sign_in(req, res) {
     $or: [{ nick: userLoggingIn.nick }, { email: userLoggingIn.nick }],
   }).then((dbUser, err) => {
     if (err !== undefined) {
-      console.log("Error here");
       return convertResponse(responses.custom_error(err), res);
     }
     if (!dbUser) {
@@ -178,7 +177,6 @@ function userCreate(
   let user = new User(userDetail);
   user.save(function (err) {
     if (err) {
-      console.log(`Error ocurred on line 134: ${err}`);
       return convertResponse(responses.custom_error(err), res);
     }
     const payload = {
@@ -193,7 +191,6 @@ function userCreate(
       { expiresIn: 86400 },
       (err, token) => {
         if (err) {
-          console.log(`Error ocurred on line 149: ${err}`);
           return convertResponse(responses.custom_error(err), res);
         }
         return res.status(200).json({ token: `Bearer ${token}` });

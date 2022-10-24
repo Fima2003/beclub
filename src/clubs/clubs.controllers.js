@@ -61,7 +61,7 @@ function update_club(req, res) {
 async function delete_club(req, res) {
   let club = await Club.findOne({ nick: req.params["nick"] });
   for (let subscription in club.subscriptions) {
-    Subscription.deleteOne({ _id: id });
+    Subscription.deleteOne({ _id: subscription });
   }
   Club.deleteOne({ nick: req.body.nick }).then((result) => {
     if (result.acknowledged) {
@@ -92,7 +92,6 @@ async function get_clubs(req, res) {
   let clubs = await Club.find({}, { comments: { $slice: +amount } })
     .limit(amount)
     .select("nick support_email website name promotions topic");
-  console.log(clubs);
   return res.status(200).json({ message: clubs });
 }
 

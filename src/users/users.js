@@ -12,7 +12,7 @@ router.get(
   userControllers.get_users
 );
 router.get("/self", userMiddleware.isAuthenticated, userControllers.get_user);
-router.post("/create-user", userControllers.create_user);
+router.post("/create_user", userControllers.create_user);
 router.put(
   "/:nick",
   userMiddleware.isAuthenticated,
