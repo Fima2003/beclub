@@ -1,6 +1,6 @@
-const responses = require("../../utils/responses");
+const responses = require("../utils/responses");
 const jwt = require("jsonwebtoken");
-const { convertResponse } = require("../../utils/external_functions");
+const { convertResponse } = require("../utils/external_functions");
 const User = require("../users/users.model");
 const { isAdmin } = require("./admin.middleware");
 

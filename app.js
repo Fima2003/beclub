@@ -6,7 +6,7 @@ const logger = require("morgan");
 const methodOverride = require("method-override");
 const session = require("express-session");
 const bodyParser = require("body-parser");
-
+require("dotenv").config();
 const indexRouter = require("./src/index");
 const apiRouter = require("./src/api/api");
 const app = express();
@@ -31,7 +31,7 @@ app.use(logger("dev"));
 app.use(cookieParser());
 app.use(
   session({
-    secret: "Xuwkd42iIHA123USGDI9821bwAHSAKASU2",
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { maxAge: 60 * 60 * 1000 },

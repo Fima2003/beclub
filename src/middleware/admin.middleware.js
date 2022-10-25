@@ -1,5 +1,5 @@
-const { convertResponse } = require("../../utils/external_functions");
-const responses = require("../../utils/responses");
+const { convertResponse } = require("../utils/external_functions");
+const responses = require("../utils/responses");
 
 function isAdmin(req) {
   return req.user.type === "admin";

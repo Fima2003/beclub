@@ -1,9 +1,9 @@
 const Subscription = require("./subscriptions.model");
 const User = require("../users/users.model");
 const Club = require("../clubs/models/clubs.model");
-const responses = require("../../utils/responses");
+const responses = require("../utils/responses");
 const mongoose = require("mongoose");
-const { convertResponse } = require("../../utils/external_functions");
+const { convertResponse } = require("../utils/external_functions");
 
 async function get_subscription(req, res) {
   const options = req.params.id;

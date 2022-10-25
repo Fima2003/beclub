@@ -1,10 +1,11 @@
 const unVerified = require("./models/verify_clubs.model");
 const Club = require("./models/clubs.model");
-const responses = require("../../utils/responses");
+const responses = require("../utils/responses");
 const bcrypt = require("bcrypt");
-const db = require("../../utils/db_setup");
-const { convertResponse } = require("../../utils/external_functions");
-
+const db = require("../utils/db_setup");
+const { convertResponse } = require("../utils/external_functions");
+const { EMAIL_NAME } = require("../utils/constants");
+const transporter = require("../utils/mail_setup");
 async function create(req, res) {
   //TODO: implement verification for nicknames(both front and back end)
 
@@ -71,11 +72,26 @@ async function verify(req, res) {
       password: pass,
       topic: options["topic"],
     };
+
     unVerified.deleteOne({ nick: options["nick"] }, function (err, obj) {
       if (err) {
         return convertResponse(responses.custom_error(err), res);
       }
       let club = new Club(clubDefaults);
+      console.log(options["support_email"]);
+      var mailOptions = {
+        from: EMAIL_NAME,
+        to: options["support_email"],
+        subject: "Cluves club verification result",
+        text: "Congratulations!",
+      };
+      transporter.sendMail(mailOptions, function (err, info) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(info);
+        }
+      });
       club.save(async function (err) {
         if (err) {
           return convertResponse(responses.custom_error(err), res);

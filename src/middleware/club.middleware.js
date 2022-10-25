@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-const { convertResponse } = require("../../utils/external_functions");
-const responses = require("../../utils/responses");
+const { convertResponse } = require("../utils/external_functions");
+const responses = require("../utils/responses");
 const Club = require("../clubs/models/clubs.model");
 const { isAdmin } = require("./admin.middleware");
 

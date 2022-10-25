@@ -2,8 +2,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const User = require("./users.model");
-const responses = require("../../utils/responses");
-const { convertResponse } = require("../../utils/external_functions");
+const responses = require("../utils/responses");
+const { convertResponse } = require("../utils/external_functions");
 const Subscription = require("../subscriptions/subscriptions.model");
 
 /** CRUD FOR USER */

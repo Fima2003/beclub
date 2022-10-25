@@ -1,9 +1,9 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const responses = require("../../utils/responses");
+const responses = require("../utils/responses");
 const Club = require("./models/clubs.model");
-const { convertResponse } = require("../../utils/external_functions");
+const { convertResponse } = require("../utils/external_functions");
 const Subscription = require("../subscriptions/subscriptions.model");
 
 /** CRUD FOR CLUBS */
