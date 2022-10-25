@@ -82,16 +82,10 @@ async function verify(req, res) {
       var mailOptions = {
         from: EMAIL_NAME,
         to: options["support_email"],
-        subject: "Cluves club verification result",
+        subject: "Cluves verification result",
         text: "Congratulations!",
       };
-      transporter.sendMail(mailOptions, function (err, info) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(info);
-        }
-      });
+      transporter.sendMail(mailOptions, function (err, info) {});
       club.save(async function (err) {
         if (err) {
           return convertResponse(responses.custom_error(err), res);
@@ -112,6 +106,13 @@ function reject(req, res) {
       if (err) {
         return convertResponse(responses.custom_error(err), res);
       }
+      var mailOptions = {
+        from: EMAIL_NAME,
+        to: options["support_email"],
+        subject: "Cluves verification result",
+        text: "Unfortunately, we could not verify you to become one of our clubs. But don't lose hope, try again! We are always happy to see you here)",
+      };
+      transporter.sendMail(mailOptions, function (err, info) {});
       let results = await db.collection("unVerifiedClubs").find().toArray();
       return res.status(200).json({ results: results });
     });
